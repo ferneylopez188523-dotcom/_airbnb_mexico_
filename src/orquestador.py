@@ -5,7 +5,7 @@ from carga import Carga
 from config import configurar_logs
 from extraccion import Extraccion
 #from modelo_bi import ModeloBI
-#from transformacion import Transformacion
+from transformacion import Transformacion
 
 
 def ejecutar_etl() -> bool:
@@ -22,8 +22,8 @@ def ejecutar_etl() -> bool:
         datos = extractor.obtener_datos()
 
         # FASE 2: TRANSFORMACIÓN
-        #logging.info(">>> FASE 2: TRANSFORMACIÓN")
-        #datos_limpios = Transformacion(datos).ejecutar_transformacion()
+        logging.info(">>> FASE 2: TRANSFORMACIÓN")
+        datos_limpios = Transformacion(datos).ejecutar_transformacion()
 
         # FASE 3: CARGA
        # logging.info(">>> FASE 3: CARGA")
