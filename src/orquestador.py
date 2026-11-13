@@ -26,8 +26,8 @@ def ejecutar_etl() -> bool:
         datos_limpios = Transformacion(datos).ejecutar_transformacion()
 
         # FASE 3: CARGA
-       # logging.info(">>> FASE 3: CARGA")
-        #resultados = Carga(datos_limpios).ejecutar_carga(exportar=True)
+        logging.info(">>> FASE 3: CARGA")
+        resultados = Carga(datos_limpios).ejecutar_carga(exportar=True)
 
         # FASE 4: MODELO ESTRELLA PARA BI (Power BI)
         #logging.info(">>> FASE 4: MODELO ESTRELLA PARA BI")
