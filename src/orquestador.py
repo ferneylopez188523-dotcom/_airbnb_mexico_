@@ -9,7 +9,7 @@ from transformacion import Transformacion
 
 
 def ejecutar_etl() -> bool:
-    """Ejecuta Extracción -> Transformación -> Carga -> Modelo BI. Devuelve True si todo salió bien."""
+    """Ejecuta Extracción -> Transformación -> Carga"""
     configurar_logs()
     logging.info("=" * 50)
     logging.info("INICIANDO PIPELINE ETL - AIRBNB CDMX")
@@ -38,17 +38,6 @@ def ejecutar_etl() -> bool:
         return False
     finally:
         extractor.cerrar_conexion()
-
-    """# Revisión final: si alguna tabla falló o no coincidió el conteo, se reporta como fallo.
-    errores = [
-        f"{fase}/{tabla}"
-        for fase, tablas in resultados.items()
-        for tabla, res in tablas.items()
-        if res["estado"] != "exito" or res.get("verificado") is False
-    ]
-    if errores:
-        logging.error(f"PIPELINE FINALIZADO CON ERRORES en: {', '.join(errores)}")
-        return False"""
 
     logging.info("PIPELINE ETL FINALIZADO CON ÉXITO")
     return True
