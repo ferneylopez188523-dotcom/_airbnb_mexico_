@@ -242,3 +242,7 @@ logs/
 # Data
 *.db
 *.xlsx
+
+# Evidencias pequeñas y reproducibles del modelo (no son datos fuente).
+!resultados/
+!resultados/*.csv

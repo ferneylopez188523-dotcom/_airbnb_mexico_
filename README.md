@@ -86,6 +86,20 @@ El orquestador ejecuta 4 fases:
 
 > Nota: el `calendar.csv.gz` completo de CDMX tiene millones de filas (un año por alojamiento); la ejecución puede tardar varios minutos.
 
+### 2. Ejecutar el modelo predictivo
+
+Abrir y ejecutar en orden `notebooks/02_modelado_predictivo_precio.ipynb`. El notebook
+busca primero `data/airbnb.db`, después `data/listings.csv.gz` y, si ninguno existe,
+descarga el corte oficial de Inside Airbnb usado en el proyecto. El entorno exacto con el
+que se generaron los resultados se documenta en `requirements-model.txt`.
+
+```bash
+pip install -r requirements-model.txt
+jupyter notebook notebooks/02_modelado_predictivo_precio.ipynb
+```
+
+Al finalizar se actualizan el modelo en `artifacts/` y las evidencias en `resultados/`.
+
 
 ## Componentes
 
@@ -196,18 +210,35 @@ Establecer procedimientos de actualización de datos, validación de indicadores
 
 ### 5.3. Conclusiones del modelo predictivo
 
-**Estado: pendiente de integración.**
+Se desarrolló un modelo de regresión para estimar el precio publicado por noche de un
+alojamiento. Se trabajó con 28.076 anuncios con precio positivo hasta el percentil 99
+($13.476,25 MXN) y 18 variables físicas, geográficas, categóricas y operativas.
 
-Una vez finalizada la fase de Aprendizaje Computacional, se incorporarán los siguientes resultados:
+La evaluación se diseñó para evitar fuga de información: entrenamiento y prueba se
+separaron por `host_id`, sin anfitriones compartidos, y la selección se realizó con
+`GroupKFold` de cinco pliegues. Se compararon una línea base, Ridge, Random Forest e
+HistGradientBoosting. Este último obtuvo el menor MAE y se ajustó mediante búsqueda
+aleatoria de 12 configuraciones.
 
-- Modelo supervisado seleccionado y justificación de su elección.
-- Variable objetivo y principales variables predictoras.
-- Métricas de evaluación del modelo.
-- Interpretación de los resultados obtenidos.
-- Limitaciones y posibles oportunidades de mejora.
-- Recomendaciones derivadas de las predicciones.
+En 5.869 anuncios de prueba pertenecientes a anfitriones no vistos, el modelo final logró:
 
-Estos elementos permitirán complementar los resultados descriptivos obtenidos mediante Inteligencia de Negocios con los resultados del análisis predictivo.
+- MAE: **$646,87 MXN** (IC 95 %: $620,13–$677,97).
+- RMSE: **$1.269,43 MXN**.
+- R²: **0,491**.
+- Error absoluto mediano: **$312,62 MXN**.
+- MAPE: **31,30 %**.
+- Reducción del MAE frente a la línea base: **40,0 %**.
+
+Las variables con mayor importancia predictiva fueron el tipo de propiedad, el número de
+baños, la capacidad, la ubicación y el número de habitaciones. El análisis por segmentos
+mostró que el error aumenta de $245,00 en el cuartil económico a $1.621,80 en el cuartil
+alto. El modelo no es confiable para habitaciones de hotel, ya que solo hubo 24 casos de
+prueba y el MAE fue elevado.
+
+El modelo debe utilizarse como referencia de mercado y no como precio automático. No
+predice demanda, reservas, ocupación, ingresos ni causalidad. Los detalles completos se
+encuentran en `notebooks/02_modelado_predictivo_precio.ipynb` y en
+`docs/04_05_modelado_conclusiones.md`.
 
 ### 5.4. Conclusión general
 
@@ -215,6 +246,13 @@ Los resultados obtenidos hasta esta etapa demuestran la utilidad de integrar pro
 
 La solución de Inteligencia de Negocios desarrollada permite identificar patrones de oferta, diferencias de precios, variaciones de disponibilidad y actividad de reseñas, proporcionando información relevante para apoyar la toma de decisiones de diferentes actores organizacionales.
 
-La conclusión integral del proyecto se completará con los resultados del modelo predictivo, permitiendo relacionar los hallazgos descriptivos con las capacidades de predicción desarrolladas en la fase de Aprendizaje Computacional.
+La integración del análisis descriptivo, los dashboards y el modelo predictivo permite
+pasar de comprender el mercado a estimar un precio de referencia para anuncios dentro del
+rango habitual. La mejora del 40,0 % frente a la línea base demuestra utilidad, aunque el
+error por segmentos exige revisión humana en alojamientos caros o poco frecuentes.
+
+Como recomendación general, se propone incorporar la diferencia entre precio publicado y
+precio estimado al dashboard, actualizar el modelo con cada corte trimestral y validar su
+desempeño sobre un período futuro antes de cualquier uso operativo.
 
 
