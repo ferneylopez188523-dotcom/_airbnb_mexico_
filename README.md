@@ -2,8 +2,8 @@
 
 | Integrante | Responsabilidad |
 | --- | --- |
-| Santiago Varela | Extracción y Transformación de datos |
-| Ferney López Copete | Análisis EDA y modelo |
+| Ferney López Copete | Extracción y Transformación de datos |
+| Santiago Varela | Análisis EDA y modelo |
 | Leidy Melissa Trejos Pamplona | Documentación y tablero BI |
 | José Ricardo Quirós | Modelado Predictivo con Aprendizaje Computacional |
 
